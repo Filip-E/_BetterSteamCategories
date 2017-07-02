@@ -1,0 +1,94 @@
+<html>
+<head>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <title>Game DB</title>
+</head>
+<body>
+  <nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav">
+          <li class="active"><a href="home.html">Home<span class="sr-only">(current)</span></a></li>
+        </ul>
+      </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+  </nav>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">List of Games</h3>
+    </div>
+    <div class="panel-body">
+      <div class="row" id="gameList">
+      </div>
+    </div>
+  </div>
+</ul>
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.0.min.js"></script>
+
+<script>
+$(document).ready(function(){
+  getGame();
+});
+
+function getGame(){
+  var sUrl = 'http://localhost:8080';
+  // data which get send to the server
+  var apiKey = '6E8C398707989675705EC519EBB8790D';
+  var steamId = '76561198082201725';
+  var keys = {
+    'apiKey' : apiKey,
+    'steamId' : steamId
+  };
+  /*$.get(sUrl, keys, function(response){
+  var json = JSON.parse(response);
+  console.log(json);
+  var gamesArray = json.response.games;
+  $.each(gamesArray,function(index, el) {
+  setHtml(index, el);
+});
+});*/
+$.ajax({
+  headers:{
+    'Accept':'application/json'
+  },
+  type: 'POST',
+  url: sUrl,
+  data: JSON.stringify(keys),
+  success: function(res){
+    console.log(res);
+    var gamesArray = res.response.games;
+    $.each(gamesArray,function(index, el) {
+      setHtml(index, el);
+    });
+  },
+  dataType: 'json'
+});
+};
+
+/*function getSucces(response){
+var json = JSON.parse(response);
+console.log(json);
+var gamesArray = json.response.games;
+$.each(gamesArray,function(index, el) {
+setHtml(index, el);
+});
+};*/
+
+function setHtml(htmlID, game){
+  var appid = game.appid;
+  var name = game.name;
+  var imgHash = game.img_logo_url;
+  if (imgHash != '') {
+    var imgUrl = 'http://media.steampowered.com/steamcommunity/public/images/apps/' + appid + '/' + imgHash + '.jpg';
+    var html = '<div class="col-md-3"><h3>' + name + '</h3><div class="thumbnail">'+
+    '<img src="'+ imgUrl +'"></div></div>';
+    $('#gameList').append(html);
+  }else {
+    console.log(appid);
+  }
+}
+
+</script>
+</body>
+</html>
