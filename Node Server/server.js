@@ -6,13 +6,13 @@ http.createServer(function(request, response){
   response.setHeader("Access-Control-Allow-Origin", "*");
   response.writeHead(200);
   // set url
-  request.setEncoding('utf8'); // why
-  var sData = '';
+  request.setEncoding('utf8'); // why?
+  let rawData = '';
   request.on('data',function(chunk){
-    sData += chunk;
+    rawData += chunk;
   });
   request.on('end',function(){
-    var keys = JSON.parse(sData);
+    var keys = JSON.parse(rawData);
     var url = 'http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=' + keys.apiKey + '&steamid='+keys.steamId+'&format=json&include_appinfo=1';
     // get owned games from steam api
     http.get(url, function(res){
@@ -38,7 +38,7 @@ http.createServer(function(request, response){
       let rawData = '';
       res.on('data', function(chunk){
         rawData += chunk;
-      }); // what? --> check javascript...
+      });
       res.on('end', function(){
         try {
           const parsedData = JSON.parse(rawData);
