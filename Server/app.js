@@ -1,23 +1,26 @@
 var http = require('http');
-var port = 8080;
+var express = require('express');
+var app = express();
 
-http.createServer(function(request, response){
+app.post('/',function(req,res){
   //  allow CORS and write response header
-  response.setHeader("Access-Control-Allow-Origin", "*");
-  response.writeHead(200);
-  // set url
-  request.setEncoding('utf8'); // why?
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.writeHead(200);
+  // get data from request
+  req.setEncoding('utf8'); // why?
   let rawData = '';
-  request.on('data',function(chunk){
+  req.on('data',function(chunk){
     rawData += chunk;
   });
-  request.on('end',function(){
+  // when done getting data from request
+  req.on('end',function(){
+    // set url
     var keys = JSON.parse(rawData);
     var url = 'http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=' + keys.apiKey + '&steamid='+keys.steamId+'&format=json&include_appinfo=1';
     // get owned games from steam api
-    http.get(url, function(res){
-      const { statusCode } = res;
-      const contentType = res.headers['content-type'];
+    http.get(url, function(responseSteam){
+      const { statusCode } = responseSteam;
+      const contentType = responseSteam.headers['content-type'];
       // error checking
       let error;
       if (statusCode !== 200) {
@@ -30,29 +33,25 @@ http.createServer(function(request, response){
       if (error) {
         console.error(error.message);
         // consume response data to free up memory
-        res.resume();
+        responseSteam.resume();
         return;
       }
-      // parse json
-      res.setEncoding('utf8'); // why?
+      // get data from steam
+      responseSteam.setEncoding('utf8'); // why?
       let rawData = '';
-      res.on('data', function(chunk){
+      responseSteam.on('data', function(chunk){
         rawData += chunk;
       });
-      res.on('end', function(){
-        try {
-          const parsedData = JSON.parse(rawData);
-          // START OWN CODE
-          var jsonString = JSON.stringify(parsedData);
-          response.end(jsonString);
-          // END OWN CODE
-        } catch (e) {
-          console.error(e.message);
-        }
+      // when done getting data from steam
+      responseSteam.on('end', function(){
+          // write to the response stream and end the stream
+          res.end(rawData);
       });
     }).on('error', (e) => {
       console.error(`Got error: ${e.message}`);
     });
   });
-}).listen(port);
-console.log('listening on port ' + port + '...');
+});
+app.listen(8080,function(){
+  console.log('listening to port 8080');
+});

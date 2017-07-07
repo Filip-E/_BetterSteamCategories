@@ -40,30 +40,23 @@ function getGame(){
     'apiKey' : apiKey,
     'steamId' : steamId
   };
-  /*$.get(sUrl, keys, function(response){
-  var json = JSON.parse(response);
-  console.log(json);
-  var gamesArray = json.response.games;
-  $.each(gamesArray,function(index, el) {
-  setHtml(index, el);
-});
-});*/
-$.ajax({
-  headers:{
-    'Accept':'application/json'
-  },
-  type: 'POST',
-  url: sUrl,
-  data: JSON.stringify(keys),
-  success: function(res){
-    console.log(res);
-    var gamesArray = res.response.games;
-    $.each(gamesArray,function(index, el) {
-      setHtml(index, el);
-    });
-  },
-  dataType: 'json'
-});
+  // need to do a post becuase get doesn't have a body. So it doesn't trigger data event in node js
+  $.ajax({
+    headers:{
+      'Accept':'application/json'
+    },
+    type: 'POST',
+    url: sUrl,
+    data: JSON.stringify(keys),
+    success: function(res){
+      console.log(res);
+      var gamesArray = res.response.games;
+      $.each(gamesArray,function(index, el) {
+        setHtml(index, el);
+      });
+    },
+    dataType: 'json'
+  });
 };
 
 /*function getSucces(response){
