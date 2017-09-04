@@ -16,10 +16,29 @@
   </nav>
   <div class="panel panel-default">
     <div class="panel-heading">
-      <h3 class="panel-title">List of Games</h3>
+      <h3 class="panel-title">Create Category</h3>
     </div>
     <div class="panel-body">
-      <div class="row" id="gameList">
+      <div class="row" id="Create Category">
+        <div class="col-md-4">
+          <div class="input-group">
+            <input id="txtCategoryName" type="text" class="form-control" placeholder="Category Name">
+            <span class="input-group-btn">
+              <button id="btnCreateCategory" class="btn btn-default" type="button">Create</button>
+            </span>
+          </div><!-- /input-group -->
+        </div><!-- /.col-lg-6 -->
+      </div><!-- row -->
+    </div>
+  </div>
+  <div id="Categories">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Games List</h3>
+      </div>
+      <div class="panel-body">
+        <div class="row" id="gameList">
+        </div>
       </div>
     </div>
   </div>
@@ -29,10 +48,27 @@
 <script>
 $(document).ready(function(){
   getGame();
+  // create a new Category
+  $('#btnCreateCategory').on('click', function(event) {
+    event.preventDefault();
+    var category = {'name': $('#txtCategoryName').val()};
+    $.ajax({
+      headers:{
+        'Accept':'application/json'
+      },
+      type: 'POST',
+      url: 'http://localhost:8080/categories',
+      data: JSON.stringify(category),
+      success: function(res){
+        console.log(res);
+      },
+      dataType: 'json'
+    });
+  });
 });
 
 function getGame(){
-  var sUrl = 'http://localhost:8080';
+  var sUrl = 'http://localhost:8080/gamesList';
   // data which get send to the server
   var apiKey = '6E8C398707989675705EC519EBB8790D';
   var steamId = '76561198082201725';
@@ -40,23 +76,30 @@ function getGame(){
     'apiKey' : apiKey,
     'steamId' : steamId
   };
-  // need to do a post becuase get doesn't have a body. So it doesn't trigger data event in node js
-  $.ajax({
-    headers:{
-      'Accept':'application/json'
-    },
-    type: 'POST',
-    url: sUrl,
-    data: JSON.stringify(keys),
-    success: function(res){
-      console.log(res);
-      var gamesArray = res.response.games;
-      $.each(gamesArray,function(index, el) {
-        setHtml(index, el);
-      });
-    },
-    dataType: 'json'
-  });
+  /*$.get(sUrl, keys, function(response){
+  var json = JSON.parse(response);
+  console.log(json);
+  var gamesArray = json.response.games;
+  $.each(gamesArray,function(index, el) {
+  setHtml(index, el);
+});
+});*/
+$.ajax({
+  headers:{
+    'Accept':'application/json'
+  },
+  type: 'POST',
+  url: sUrl,
+  data: JSON.stringify(keys),
+  success: function(res){
+    console.log(res);
+    var gamesArray = res.response.games;
+    $.each(gamesArray,function(index, el) {
+      setHtml(index, el);
+    });
+  },
+  dataType: 'json'
+});
 };
 
 /*function getSucces(response){

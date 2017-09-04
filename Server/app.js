@@ -2,7 +2,8 @@ var http = require('http');
 var express = require('express');
 var app = express();
 
-app.post('/',function(req,res){
+// gets all the ownded games from steam
+app.post('/gamesList',function(req,res){
   //  allow CORS and write response header
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.writeHead(200);
@@ -44,13 +45,33 @@ app.post('/',function(req,res){
       });
       // when done getting data from steam
       responseSteam.on('end', function(){
-          // write to the response stream and end the stream
-          res.end(rawData);
+        // write to the response stream and end the stream
+        res.end(rawData);
       });
     }).on('error', (e) => {
       console.error(`Got error: ${e.message}`);
     });
   });
+});
+
+// Categories
+var categories = {};
+app.post('/categories',function(req,res){
+  res.writeHead(200);
+  // get data from request
+  req.setEncoding('utf8'); // why?
+  var rawData = '';
+  req.on('data',function(chunk){
+    rawData += chunk;
+  });
+  req.on('end',function(){
+    var newCategory = JSON.parse(rawData);
+    console.log(newCategory);
+    categories[newCategory.name] = newCategory;
+    console.log(JSON.stringify(categories));
+
+  });
+
 });
 app.listen(8080,function(){
   console.log('listening to port 8080');
