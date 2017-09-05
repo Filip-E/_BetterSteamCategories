@@ -56,25 +56,38 @@ app.post('/gamesList',function(req,res){
 });
 
 // Categories
-var categories = {};
+var categoriesJSON = {categories: []};
+
 app.post('/categories',function(req,res){
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.writeHead(200);
   // get data from request
-  req.setEncoding('utf8'); // why?
+  req.setEncoding('utf8');
   var rawData = '';
   req.on('data',function(chunk){
     rawData += chunk;
   });
   req.on('end',function(){
     var newCategory = JSON.parse(rawData);
-    console.log(newCategory);
-    categories[newCategory.name] = newCategory;
-    console.log(JSON.stringify(categories));
+    console.log('new category:' + JSON.stringify(newCategory));
+    if (categoriesJSON.categories.length == 0 ) {
+      categoriesJSON.categories[0] = newCategory;
+    }else {
+      categoriesJSON.categories[categoriesJSON.categories.length] = newCategory;
+    }
+
+    console.log('all categories:' + JSON.stringify(categoriesJSON));
     res.end(JSON.stringify(newCategory));
   });
 
 });
+app.get('/categories',function(req,res){
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.writeHead(200);
+  console.log('categories request recieved.');
+  res.end(JSON.stringify(categoriesJSON));
+});
+
 app.listen(8080,function(){
   console.log('listening to port 8080');
 });

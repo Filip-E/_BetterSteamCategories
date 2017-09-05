@@ -38,7 +38,12 @@
       </div>
       <div class="panel-body">
         <div class="row" id="gameList">
+          <div class="col-md-4">
+            <span class="input-group-addon">
 
+              <!-- a list of games gets generated and put here -->
+            </span>
+          </div><!-- /.col-lg-6 -->
         </div>
       </div>
     </div>
@@ -48,17 +53,19 @@
 
 <script>
 $(document).ready(function(){
-//  getGame();
+  getGame();
+  getCategories();
   // create a new Category
   $('#btnCreateCategory').on('click', function(event) {
     event.preventDefault();
     var category = {'name': $('#txtCategoryName').val()};
+    var sUrl = 'http://localhost:8080/categories'
     $.ajax({
       headers:{
         'Accept':'application/json'
       },
       type: 'POST',
-      url: 'http://localhost:8080/categories',
+      url: sUrl ,
       data: JSON.stringify(category),
       success: function(res){
         console.log(res);
@@ -70,6 +77,7 @@ $(document).ready(function(){
   });
 });
 
+//Game List
 function getGame(){
   var sUrl = 'http://localhost:8080/gamesList';
   // data which get send to the server
@@ -79,44 +87,67 @@ function getGame(){
     'apiKey' : apiKey,
     'steamId' : steamId
   };
-$.ajax({
-  headers:{
-    'Accept':'application/json'
-  },
-  type: 'POST',
-  url: sUrl,
-  data: JSON.stringify(keys),
-  success: function(res){
-    console.log(res);
-    var gamesArray = res.response.games;
-    $.each(gamesArray,function(index, el) {
-      setHtmlGameList(index, el);
-    });
-  },
-  dataType: 'json'
-});
+  $.ajax({
+    headers:{
+      'Accept':'application/json'
+    },
+    type: 'POST',
+    url: sUrl,
+    data: JSON.stringify(keys),
+    success: function(res){
+      console.log(res);
+      var gamesArray = res.response.games;
+      $.each(gamesArray,function(index, el) {
+        setHtmlGameList(index, el);
+      });
+    },
+    dataType: 'json'
+  });
 };
 
 function setHtmlGameList(htmlID, game){
   var appid = game.appid;
   var name = game.name;
-  var imgHash = game.img_logo_url;
-  if (imgHash != '') {
-    var imgUrl = 'http://media.steampowered.com/steamcommunity/public/images/apps/' +
-                  appid + '/' + imgHash + '.jpg';
-    var html = '<div class="col-md-3"><h3>' + name + '</h3><div class="thumbnail">'+
-    '<img src="'+ imgUrl +'"></div></div>';
-    $('#gameList').append(html);
+  var iconHash = game.img_icon_url;
+  var iconUrl;
+  if (iconHash != '') {
+    iconUrl = 'http://media.steampowered.com/steamcommunity/public/images/apps/' +
+    appid + '/' + iconHash + '.jpg';
   }else {
     console.log(appid);
   }
+  var html = '<img src="' + iconUrl + '" />' + name +
+  '<input type="checkbox" class="gameListCheckbox"><br /><br />';
+
+  $('#gameList').find('span').append(html);
 }
 
-function setHtmlNewCategory(newCategory){
-  var name = newCategory.name;
+// Categories
+function getCategories(){
+  var sUrl = 'http://localhost:8080/categories';
+  $.ajax({
+    headers:{
+      'Accept':'application/json'
+    },
+    type: 'GET',
+    url: sUrl,
+    success: function(res){
+      console.log(res);
+      $.each(res.categories,function(index, el) {
+        setHtmlNewCategory(el);
+      });
+    },
+    dataType: 'json'
+  });
+}
+
+function setHtmlNewCategory(category){
+  var name = category.name;
   var html = '<div class="panel panel-default"><div class="panel-heading">' +
-             '<h3 class="panel-title">' + name + '</h3></div><div class="panel-body">' +
-             '<div class="row" id="' + name + '"></div></div></div>';
+  '<h3 class="panel-title">' + name + '</h3>'+
+  '<button type="button" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span></button>'+
+  '</div><div class="panel-body">' +
+  '<div class="row" id="' + name + '"></div></div></div>';
 
   $('#Categories').prepend(html);
 }
