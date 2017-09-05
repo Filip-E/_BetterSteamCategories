@@ -47,7 +47,7 @@
 
 <script>
 $(document).ready(function(){
-  getGame();
+//  getGame();
   // create a new Category
   $('#btnCreateCategory').on('click', function(event) {
     event.preventDefault();
@@ -61,6 +61,7 @@ $(document).ready(function(){
       data: JSON.stringify(category),
       success: function(res){
         console.log(res);
+        setHtmlNewCategory(res);
       },
       dataType: 'json'
     });
@@ -76,14 +77,6 @@ function getGame(){
     'apiKey' : apiKey,
     'steamId' : steamId
   };
-  /*$.get(sUrl, keys, function(response){
-  var json = JSON.parse(response);
-  console.log(json);
-  var gamesArray = json.response.games;
-  $.each(gamesArray,function(index, el) {
-  setHtml(index, el);
-});
-});*/
 $.ajax({
   headers:{
     'Accept':'application/json'
@@ -95,28 +88,20 @@ $.ajax({
     console.log(res);
     var gamesArray = res.response.games;
     $.each(gamesArray,function(index, el) {
-      setHtml(index, el);
+      setHtmlGameList(index, el);
     });
   },
   dataType: 'json'
 });
 };
 
-/*function getSucces(response){
-var json = JSON.parse(response);
-console.log(json);
-var gamesArray = json.response.games;
-$.each(gamesArray,function(index, el) {
-setHtml(index, el);
-});
-};*/
-
-function setHtml(htmlID, game){
+function setHtmlGameList(htmlID, game){
   var appid = game.appid;
   var name = game.name;
   var imgHash = game.img_logo_url;
   if (imgHash != '') {
-    var imgUrl = 'http://media.steampowered.com/steamcommunity/public/images/apps/' + appid + '/' + imgHash + '.jpg';
+    var imgUrl = 'http://media.steampowered.com/steamcommunity/public/images/apps/' +
+                  appid + '/' + imgHash + '.jpg';
     var html = '<div class="col-md-3"><h3>' + name + '</h3><div class="thumbnail">'+
     '<img src="'+ imgUrl +'"></div></div>';
     $('#gameList').append(html);
@@ -125,6 +110,14 @@ function setHtml(htmlID, game){
   }
 }
 
+function setHtmlNewCategory(newCategory){
+  var name = newCategory.name;
+  var html = '<div class="panel panel-default"><div class="panel-heading">' +
+             '<h3 class="panel-title">' + name + '</h3></div><div class="panel-body">' +
+             '<div class="row" id="' + name + '"></div></div></div>';
+
+  $('#Categories').append(html);
+}
 </script>
 </body>
 </html>

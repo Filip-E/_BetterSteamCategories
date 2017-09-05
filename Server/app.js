@@ -17,7 +17,8 @@ app.post('/gamesList',function(req,res){
   req.on('end',function(){
     // set url
     var keys = JSON.parse(rawData);
-    var url = 'http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=' + keys.apiKey + '&steamid='+keys.steamId+'&format=json&include_appinfo=1';
+    var url = 'http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=' + keys.apiKey +
+              '&steamid='+keys.steamId+'&format=json&include_appinfo=1';
     // get owned games from steam api
     http.get(url, function(responseSteam){
       const { statusCode } = responseSteam;
@@ -57,6 +58,7 @@ app.post('/gamesList',function(req,res){
 // Categories
 var categories = {};
 app.post('/categories',function(req,res){
+  res.setHeader("Access-Control-Allow-Origin", "*");
   res.writeHead(200);
   // get data from request
   req.setEncoding('utf8'); // why?
@@ -69,7 +71,7 @@ app.post('/categories',function(req,res){
     console.log(newCategory);
     categories[newCategory.name] = newCategory;
     console.log(JSON.stringify(categories));
-
+    res.end(JSON.stringify(newCategory));
   });
 
 });
