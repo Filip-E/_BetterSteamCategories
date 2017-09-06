@@ -1,9 +1,7 @@
 //game list functions
-function getGame(){
+function getGame(steamId, apiKey){
   var sUrl = 'http://localhost:8080/gamesList';
   // data which get send to the server
-  var apiKey = '6E8C398707989675705EC519EBB8790D';
-  var steamId = '76561198082201725';
   var keys = {
     'apiKey' : apiKey,
     'steamId' : steamId
@@ -25,6 +23,35 @@ function getGame(){
     dataType: 'json'
   });
 };
+// old getGame()
+/*
+function getGame(){
+  var sUrl = 'http://localhost:8080/gamesList';
+  // data which get send to the server
+  var apiKey = '[PASTE API KEY HERE BETWEEN QUOTES]';
+  var steamId = 'PASTE STEAM ID HERE BETWEEN QUOTES';
+  var keys = {
+    'apiKey' : apiKey,
+    'steamId' : steamId
+  };
+  $.ajax({
+    headers:{
+      'Accept':'application/json'
+    },
+    type: 'POST',
+    url: sUrl,
+    data: JSON.stringify(keys),
+    success: function(res){
+      console.log(res);
+      var gamesArray = res.response.games;
+      $.each(gamesArray,function(index, el) {
+        setHtmlGameList(index, el);
+      });
+    },
+    dataType: 'json'
+  });
+};
+*/
 
 function setHtmlGameList(htmlID, game){
   var appid = game.appid;
