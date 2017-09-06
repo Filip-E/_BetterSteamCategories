@@ -29,7 +29,7 @@ function getGame(){
   var sUrl = 'http://localhost:8080/gamesList';
   // data which get send to the server
   var apiKey = '[PASTE API KEY HERE BETWEEN QUOTES]';
-  var steamId = 'PASTE STEAM ID HERE BETWEEN QUOTES';
+  var steamId = '[PASTE STEAM ID HERE BETWEEN QUOTES]';
   var keys = {
     'apiKey' : apiKey,
     'steamId' : steamId
