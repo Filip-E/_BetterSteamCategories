@@ -1,7 +1,7 @@
 <html>
 <head>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <title>Game DB</title>
+  <title>Better Steam Categories</title>
 </head>
 <body>
   <nav class="navbar navbar-default">
@@ -18,8 +18,9 @@
     <div class="row" >
       <div class="col-md-4">
         <div class="input-group">
-          Steam ID: <input id="txtSteamid" type="text" class="form-control" placeholder="Steam ID"><br />
-          Steam API key: <input id="txtSteamAPIKey" type="text" class="form-control" placeholder="Steam API key"><br />
+          Steam ID: <input id="txtSteamid" type="text" class="form-control" placeholder="Steam ID" value="76561198082201725"><br />
+          Steam API key: <input id="txtSteamAPIKey" type="text" class="form-control" placeholder="Steam API key" value="6E8C398707989675705EC519EBB8790D"><br />
+          DEV NOTE: DO THIS BEFORE CREATING CATEGORIES
           <button id="btnSendSteamInfo" class="btn btn-default" type="button">send</button>
         </div><!-- /input-group -->
       </div><!-- /.col-lg-6 -->
@@ -43,21 +44,22 @@
     </div>
   </div>
   <div id="Categories">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h3 class="panel-title">Games List</h3>
-      </div>
-      <div class="panel-body">
-        <div class="row" id="gameList">
-          <div class="col-md-4">
-            <span class="input-group-addon">
-              <!-- a list of games gets generated and put here -->
-            </span>
-          </div><!-- /.col-lg-6 -->
-        </div>
+  </div>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">Games List</h3>
+    </div>
+    <div class="panel-body">
+      <div class="row" id="gameList">
+        <div class="col-md-4">
+          <span class="input-group-addon">
+            <!-- a list of games gets generated and put here -->
+          </span>
+        </div><!-- /.col-lg-6 -->
       </div>
     </div>
   </div>
+
 </ul>
 <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.0.min.js"></script>
 <script src="Javascript/Categories.js"></script>
@@ -65,8 +67,6 @@
 <script src="Javascript/GameList.js"></script>
 <script>
 $(document).ready(function(){
-  // get a list of categories and show it on this page
-  getCategories();
 
   // event handlers
   // get a list of all owned games and show it on this page

@@ -1,15 +1,16 @@
 // Get's all the categories from the server and call setHtmlNewCategory(category)
-function getCategories(){
+function getCategories(steamId){
   var sUrl = 'http://localhost:8080/categories';
-
+  var steamIdJSON = {'steamId': steamId};
   $.ajax({
     headers:{
       'Accept':'application/json'
     },
     type: 'GET',
     url: sUrl,
+    data : steamIdJSON,
     success: function(res){
-      console.log(res);
+      $('#Categories').empty();
       $.each(res.categories,function(index, el) {
         setHtmlNewCategory(el);
       });
@@ -29,4 +30,22 @@ function setHtmlNewCategory(category){
     '<div class="row" id="' + categoryName + '"></div></div></div>';
 
   $('#Categories').prepend(html);
+}
+
+function postCategory(categoryName,steamId){
+  var category = {'name': categoryName};
+  var sUrl = 'http://localhost:8080/categories'
+  $.ajax({
+    headers:{
+      'Accept':'application/json'
+    },
+    type: 'POST',
+    url: sUrl ,
+    data: JSON.stringify(category),
+    success: function(res){
+      $('#txtCategoryName').val('');
+      getCategories(steamId);
+    },
+    dataType: 'json'
+  });
 }
