@@ -25,9 +25,9 @@ function setHtmlNewCategory(category){
   var html =
     '<div class="panel panel-default"><div class="panel-heading">' +
     '<h3 class="panel-title">' + categoryName + '</h3>'+
-    '<button type="button" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span></button>'+
+    '<button type="button" class="btn btn-default btn-sm btnAddGames" id="' + categoryName + '"><span class="glyphicon glyphicon-plus"></span></button>'+
     '</div><div class="panel-body">' +
-    '<div class="row" id="' + categoryName + '"></div></div></div>';
+    '<div class="row" id="row_' + categoryName + '"></div></div></div>';
 
   $('#Categories').prepend(html);
 }

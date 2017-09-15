@@ -12,3 +12,10 @@ function btnCreateCategoryClickListener(){
     postCategory($('#txtCategoryName').val(), $('#txtSteamid').val());
   });
 }
+
+function btnAddGamesClickListener(){
+  $('#Categories').on('click','.btnAddGames', function(event) {
+    event.preventDefault();
+    console.log($(this).attr('id'));
+  });
+}
