@@ -11,14 +11,13 @@ app.listen(8080,function(){
 
 // GAMELIST
 /***********/
-// when post request is received get owned games from steam and return that data
+// when get request is received get owned games from steam and return that data
 app.get('/gamesList',function(req,res){
   //  allow CORS and write response header
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.writeHead(200);
   // get data from request
   req.setEncoding('utf8');
-  // when done getting data from request
   // request owned games from steam
   // set url
   var keys = req.query;
