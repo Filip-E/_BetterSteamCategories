@@ -10,9 +10,9 @@ function getGame(steamId, apiKey){
     headers:{
       'Accept':'application/json'
     },
-    type: 'POST',
+    type: 'GET',
     url: sUrl,
-    data: JSON.stringify(keys),
+    data: keys,
     success: function(res){
       var gamesArray = res.response.games;
       $.each(gamesArray,function(index, el) {

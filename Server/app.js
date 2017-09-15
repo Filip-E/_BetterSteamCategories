@@ -12,57 +12,51 @@ app.listen(8080,function(){
 // GAMELIST
 /***********/
 // when post request is received get owned games from steam and return that data
-app.post('/gamesList',function(req,res){
+app.get('/gamesList',function(req,res){
   //  allow CORS and write response header
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.writeHead(200);
   // get data from request
   req.setEncoding('utf8');
-  let rawData = '';
-  req.on('data',function(chunk){
-    rawData += chunk;
-  });
   // when done getting data from request
   // request owned games from steam
-  req.on('end',function(){
-    // set url
-    var keys = JSON.parse(rawData);
-    var url = 'http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=' + keys.apiKey +
-    '&steamid='+keys.steamId+'&format=json&include_appinfo=1';
-    loggedInSteamId = keys.steamId;
-    // get request owned games from steam api
-    http.get(url, function(respnoseFromSteam){
-      const { statusCode } = respnoseFromSteam;
-      const contentType = respnoseFromSteam.headers['content-type'];
-      // error checking
-      let error;
-      if (statusCode !== 200) {
-        error = new Error('Request Failed.\n' +
-        `Status Code: ${statusCode}`);
-      } else if (!/^application\/json/.test(contentType)) {
-        error = new Error('Invalid content-type.\n' +
-        `Expected application/json but received ${contentType}`);
-      }
-      if (error) {
-        console.error(error.message);
-        // consume response data to free up memory
-        respnoseFromSteam.resume();
-        return;
-      }
-      // get data from steam api request
-      respnoseFromSteam.setEncoding('utf8');
-      let rawData = '';
-      respnoseFromSteam.on('data', function(chunk){
-        rawData += chunk;
-      });
-      // when done getting data from steam
-      respnoseFromSteam.on('end', function(){
-        // write to the response stream and end the stream
-        res.end(rawData);
-      });
-    }).on('error', (e) => {
-      console.error(`Got error: ${e.message}`);
+  // set url
+  var keys = req.query;
+  var url = 'http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=' + keys.apiKey +
+  '&steamid='+keys.steamId+'&format=json&include_appinfo=1';
+  loggedInSteamId = keys.steamId;
+  // get request owned games from steam api
+  http.get(url, function(respnoseFromSteam){
+    const { statusCode } = respnoseFromSteam;
+    const contentType = respnoseFromSteam.headers['content-type'];
+    // error checking
+    let error;
+    if (statusCode !== 200) {
+      error = new Error('Request Failed.\n' +
+      `Status Code: ${statusCode}`);
+    } else if (!/^application\/json/.test(contentType)) {
+      error = new Error('Invalid content-type.\n' +
+      `Expected application/json but received ${contentType}`);
+    }
+    if (error) {
+      console.error(error.message);
+      // consume response data to free up memory
+      respnoseFromSteam.resume();
+      return;
+    }
+    // get data from steam api request
+    respnoseFromSteam.setEncoding('utf8');
+    let rawData = '';
+    respnoseFromSteam.on('data', function(chunk){
+      rawData += chunk;
     });
+    // when done getting data from steam
+    respnoseFromSteam.on('end', function(){
+      // write to the response stream and end the stream
+      res.end(rawData);
+    });
+  }).on('error', (e) => {
+    console.error(`Got error: ${e.message}`);
   });
 });
 
