@@ -21,7 +21,7 @@
           Steam ID: <input id="txtSteamid" type="text" class="form-control" placeholder="Steam ID" value="76561198082201725"><br />
           Steam API key: <input id="txtSteamAPIKey" type="text" class="form-control" placeholder="Steam API key" value=""><br />
           DEV NOTE: DO THIS BEFORE CREATING CATEGORIES
-          <button id="btnSendSteamInfo" class="btn btn-default" type="button">send</button>
+          <button id="btnLogIn" class="btn btn-default" type="button">Log in</button>
         </div><!-- /input-group -->
       </div><!-- /.col-lg-6 -->
     </div><!-- row -->
@@ -59,20 +59,16 @@
       </div>
     </div>
   </div>
-
-</ul>
 <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.0.min.js"></script>
 <script src="Javascript/Categories.js"></script>
 <script src="Javascript/EventHandlers.js"></script>
 <script src="Javascript/GameList.js"></script>
+<script src="Javascript/TestPromise.js"></script>
 <script>
 $(document).ready(function(){
-
-  // event handlers
-  // get a list of all owned games and show it on this page
-  btnSendSteamInfoCLickListener();
+  btnLogInCLickListener();
   btnCreateCategoryClickListener();
-  btnAddGamesClickListener  ();
+  btnAddGamesToCategoryClickListener();
 });
 </script>
 </body>

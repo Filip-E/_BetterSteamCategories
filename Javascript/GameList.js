@@ -1,5 +1,4 @@
-//game list functions
-function getGame(steamId, apiKey){
+function fillGameList(steamId, apiKey){
   var sUrl = 'http://localhost:8080/gamesList';
   // data which get send to the server
   var keys = {
@@ -7,9 +6,9 @@ function getGame(steamId, apiKey){
     'steamId' : steamId
   };
   $.ajax({
-    headers:{
+    /*headers:{
       'Accept':'application/json'
-    },
+    },*/
     type: 'GET',
     url: sUrl,
     data: keys,
@@ -22,7 +21,6 @@ function getGame(steamId, apiKey){
     dataType: 'json'
   });
 };
-
 function setHtmlGameList(htmlID, game){
   var appid = game.appid;
   var name = game.name;
