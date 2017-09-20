@@ -6,9 +6,6 @@ function fillGameList(steamId, apiKey){
     'steamId' : steamId
   };
   $.ajax({
-    /*headers:{
-      'Accept':'application/json'
-    },*/
     type: 'GET',
     url: sUrl,
     data: keys,
@@ -30,8 +27,8 @@ function setHtmlGameList(htmlID, game){
     iconUrl = 'http://media.steampowered.com/steamcommunity/public/images/apps/' +
     appid + '/' + iconHash + '.jpg';
   }
-  var html = '<img src="' + iconUrl + '" />' + name +
-  '<input type="checkbox" class="gameListCheckbox"><br /><br />';
+  var html = '<div class="games" id="' + appid + '"><img src="' + iconUrl + '" />' + name +
+  '<input type="checkbox" class="gameListCheckbox"><br /><br /></div>';
 
   $('#gameList').find('span').append(html);
 }

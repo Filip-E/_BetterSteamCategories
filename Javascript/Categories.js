@@ -2,9 +2,6 @@ function fillCategories(steamId){
   var sUrl = 'http://localhost:8080/categories';
   var steamIdJSON = {'steamId': steamId};
   $.ajax({
-    /*headers:{
-      'Accept':'application/json'
-    },*/
     type: 'GET',
     url: sUrl,
     data : steamIdJSON,
@@ -33,9 +30,6 @@ function postCategory(categoryName,steamId){
   var category = {'name': categoryName};
   var sUrl = 'http://localhost:8080/categories'
   $.ajax({
-    /*headers:{
-      'Accept':'application/json'
-    },*/
     type: 'POST',
     url: sUrl ,
     data: JSON.stringify(category),

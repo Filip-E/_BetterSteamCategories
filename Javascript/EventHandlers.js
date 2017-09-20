@@ -15,6 +15,7 @@ function btnCreateCategoryClickListener(){
 function btnAddGamesToCategoryClickListener(){
   $('#Categories').on('click','.btnAddGames', function(event) {
     event.preventDefault();
-    console.log($(this).attr('id'));
+    categoryId = $(this).attr('id');
+    addGamesToCategory(categoryId);
   });
 }

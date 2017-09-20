@@ -86,7 +86,9 @@ app.post('/categories',function(req,res){
       categoriesJSON.categories[categoriesJSON.categories.length] = newCategory;
     }
     fs.writeFile(pathToFile, JSON.stringify(categoriesJSON), function(err){
-      console.log('writeFileError' + err);
+      if (err) {
+        console.log('writeFileError' + err);
+      }
     })
     res.end(JSON.stringify(newCategory));
   });
@@ -97,7 +99,9 @@ app.get('/categories',function(req,res){
   res.writeHead(200);
   req.setEncoding('utf8');
   fs.readFile('./Categories/' + req.query.steamId + '.json', 'utf8', function(err,data){
-    console.log('readFileError' + err);
+    if (err) {
+      console.log('readFileError' + err);
+    }
     res.end(data)
   });
 });
