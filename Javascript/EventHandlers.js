@@ -16,6 +16,6 @@ function btnAddGamesToCategoryClickListener(){
   $('#Categories').on('click','.btnAddGames', function(event) {
     event.preventDefault();
     categoryId = $(this).attr('id');
-    addGamesToCategory(categoryId);
+    addGamesToCategory(categoryId, $('#txtSteamid').val());
   });
 }

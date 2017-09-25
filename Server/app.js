@@ -1,8 +1,14 @@
 var http = require('http');
 var express = require('express');
-var app = express();
+var bodyParser  = require('body-parser');
 var fs = require('fs');
+var app = express();
 
+
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+app.use(bodyParser.json());
 
 var loggedInSteamId;
 app.listen(8080,function(){
@@ -64,34 +70,31 @@ app.post('/categories',function(req,res){
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.writeHead(200);
   req.setEncoding('utf8');
-  var rawData = '';
-  req.on('data',function(chunk){
-    rawData += chunk;
-  });
-  req.on('end',function(){
-    var pathToFile = './Categories/' + loggedInSteamId + '.json';
-    var newCategory = JSON.parse(rawData);
-    // add newCategory to categoriesJSON
-    if (categoriesJSON.categories.length == 0 ) {
-      fs.readFile(pathToFile, function(err,data){
-        console.log('readFileError: ' + err);
-        if (typeof data !== 'undefined') {
-          categoriesJSON = JSON.parse(data);
-          categoriesJSON.steamId = loggedInSteamId;
-          console.log('categoriesJSON: ' + JSON.stringify(categoriesJSON));
-        }
-      });
-      categoriesJSON.categories[0] = newCategory;
-    }else {
-      categoriesJSON.categories[categoriesJSON.categories.length] = newCategory;
-    }
-    fs.writeFile(pathToFile, JSON.stringify(categoriesJSON), function(err){
+  var pathToFile = './Categories/' + loggedInSteamId + '.json';
+  var newCategory = req.body;
+  // add newCategory to categoriesJSON
+  if (categoriesJSON.categories.length == 0 ) {
+    fs.readFile(pathToFile, function(err,data){
       if (err) {
-        console.log('writeFileError' + err);
+        console.log('readFileError: ' + err);
       }
-    })
-    res.end(JSON.stringify(newCategory));
+      if (typeof data !== 'undefined') {
+        categoriesJSON = JSON.parse(data);
+        categoriesJSON.steamId = loggedInSteamId;
+        console.log('categoriesJSON: ' + JSON.stringify(categoriesJSON));
+      }
+    });
+    categoriesJSON.categories[0] = newCategory;
+  }else {
+    categoriesJSON.categories[categoriesJSON.categories.length] = newCategory;
+  }
+  fs.writeFile(pathToFile, JSON.stringify(categoriesJSON), function(err){
+    if (err) {
+      console.log('writeFileError' + err);
+    }
   });
+  res.end(JSON.stringify(newCategory));
+
 });
 // when get request received return all the categories (categoriesJSON) to the client
 app.get('/categories',function(req,res){
@@ -104,4 +107,33 @@ app.get('/categories',function(req,res){
     }
     res.end(data)
   });
+});
+
+app.post('/categories/addGames',function(req,res){
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.writeHead(200);
+  req.setEncoding('utf8');
+
+
+  var selectedGames = req.body;
+  var filePath = './Categories/' + selectedGames.steamId + '.json';
+  fs.readFile(filePath, 'utf8', function(err,data){
+    if (err) {
+      console.error(err);
+    }
+    categoriesJSON = JSON.parse(data);
+    for (var i = 0; i < categoriesJSON.categories.length; i++) {
+      if (categoriesJSON.categories[i].name == selectedGames.selectedCategory) {
+        categoriesJSON.categories[i]['allAppId'] = selectedGames.allAppId;
+      }
+    }
+    fs.writeFile(filePath, JSON.stringify(categoriesJSON), function(err){
+      if (err) {
+        console.log('writeFileError' + err);
+      }
+      console.log('write done.' + JSON.stringify(categoriesJSON));
+      res.end(JSON.stringify(categoriesJSON));
+    });
+  });
+
 });
