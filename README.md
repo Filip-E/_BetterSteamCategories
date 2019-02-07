@@ -1,3 +1,6 @@
+# Archived 
+Archived this project. Still want to do this project at a later date with a new technology stack when I find more time.
+
 # _BetterSteamCategories
 website to improve the Steam category system
 
